@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>vue全选与反选</title>
+    <script src="./components//lib/vue.min.js"></script>
+</head>
+
+<body>
+    <div id="my">
+        <input type="checkbox" v-model="checkAll.check" @change="checkAllChange()">
+        <label>{{checkAll.name}} {{checkAll.check}}</label>
+        <ul>
+            <li v-for="list in lists">
+                <input type="checkbox" v-model="list.check" @change="curChange()">
+                <label>{{list.name}} {{list.check}}</label>
+            </li>
+        </ul>
+        <li @click="getInvertSelection()">{{invertSelection.name}} {{invertSelection.check}}</li>
+    </div>
+    <script type="text/javascript">
+        window.onload = function () {
+            var app = new Vue({
+                el: "#my",
+                data: {
+                    checkAll: { name: '全选', check: false },
+                    invertSelection: { name: '反选', check: false },
+                    lists: [{ name: '小米', check: false },
+                    { name: '华为', check: false },
+                    { name: '苹果', check: false },
+                    { name: '魅族', check: false },
+                    { name: '锤子', check: false }]
+                },
+                methods: {
+                    // 全选功能实现
+                    checkAllChange: function () {
+                        this.lists.forEach(element => {
+                            element.check = this.checkAll.check
+                        });
+                    },
+                    // 实现子全选父跟着全选
+                    curChange: function () {
+                        var arrList = []
+                        this.lists.forEach(item => {
+                            if (item.check === true) {
+                                arrList.push(item)
+                            }
+                        })
+                        if (arrList.length === this.lists.length) {
+                            this.checkAll.check = true
+                            arrList = []
+                        } else {
+                            this.checkAll.check = false
+                        }
+                    },
+                    // 实现反选
+                    getInvertSelection() {
+                        this.lists.forEach(item => {
+                            item.check = !item.check
+                        })
+                        var arrList = []
+                        this.lists.forEach(item => {
+                            if (item.check === true) {
+                                arrList.push(item)
+                            }
+                        })
+                        if (arrList.length === this.lists.length) {
+                            arrList = []
+                            this.checkAll.check = !this.checkAll.check
+                        } else {
+                            this.checkAll.check = !this.checkAll.check
+                        }
+                    }
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>
